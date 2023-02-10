@@ -1,5 +1,5 @@
 import { capitalize, separatePunctuation, toArr } from "./formatting";
-import { startsUpperCase, endsAy, startsVowel, endsDoubleConsonantAy, endsWay } from "./RegExs"
+import { startsUpperCase, endsAy, startsVowel, endsDoubleConsonantAy, endsWay, endsMultipleWay, endsAyway, endsAywa } from "./RegExs"
 import words from "../data/words.json";
 import frequencies from "../data/letterfrequencies.json";
 import commonWords from "../data/commonwords.json"
@@ -106,11 +106,15 @@ let getConfidence = (word: string, suffix: string): number => {
 
 
     //if theres two or more ways test the word without them
-    if (/(way){2,}$/.test(word) || /[a-zA-Z]{1,}(ayway)$/.test(word) || /[a-zA-Z]{1,}(aywa)$/.test(word)) {
-        if (!startsVowel.test(word) && confidence < 10000) {
+    console.log(endsMultipleWay(suffix).test(word))
+    if (endsMultipleWay(suffix).test(word) || endsAyway(suffix).test(word)
+        || endsAywa(suffix).test(word)) {
+        if ((endsAywa(suffix).test(word) || !startsVowel.test(word))
+            && confidence < 10000) {
             return 0;
         }
-        let substringConf = getConfidence(wordFromPig(word.replace(/(way)+/, ""), suffix), suffix);
+        console.log(word.replace(new RegExp(`(w${suffix})+`), ""))
+        let substringConf = getConfidence(wordFromPig(word.replace(new RegExp(`(w${suffix})+`), ""), suffix), suffix);
         if (substringConf > confidence) {
             return substringConf;
         }
