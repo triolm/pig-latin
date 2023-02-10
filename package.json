@@ -4,8 +4,7 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc&&npx webpack",
-    "start": "npm run build&&node dist/main.js"
+    "build": "npx webpack"
   },
   "keywords": [],
   "author": "",

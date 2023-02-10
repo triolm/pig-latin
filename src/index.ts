@@ -24,7 +24,6 @@ let unpigAllText = (document: Document): void => {
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    console.log(request + "aaa");
     if (request.direction === "topig") {
         pigAllText(document);
         try {
