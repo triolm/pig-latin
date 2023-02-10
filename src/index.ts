@@ -5,8 +5,11 @@ import stringFromPig from "./fromPig";
 let pigAllText = (document: Document): void => {
     let elements: NodeListOf<HTMLElement> = document.body.querySelectorAll<HTMLElement>("*");
     for (let e of elements) {
+        if (e.tagName == "STYLE" || e.tagName == "SCRIPT") {
+            continue;
+        }
         for (let n of e.childNodes) {
-            if (n.nodeName == "#text") {
+            if (n.nodeName == "#text" && n.nodeType == Node.TEXT_NODE) {
                 n.textContent = stringToPig(n.textContent ?? "");
             }
         }

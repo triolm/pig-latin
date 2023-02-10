@@ -5,6 +5,8 @@ import frequencies from "../data/letterfrequencies.json";
 import commonWords from "../data/commonwords.json"
 
 
+//words could end in W
+
 // let wordArr: wordsType = words;
 
 let wordFromPig = (s: string): string => {
@@ -108,7 +110,7 @@ let getConfidence = (word: string): number => {
 
 
     //if theres two or more ways test the word without them
-    if (/(way){2,}$/.test(word)) {
+    if (/(way){2,}$/.test(word) || /(ayway)$/.test(word) || /(aywa)$/.test(word)) {
         if (!startsVowel.test(word) && confidence < 10000) {
             return 0;
         }
