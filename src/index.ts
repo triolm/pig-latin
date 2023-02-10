@@ -2,7 +2,7 @@ import stringToPig from "./toPig";
 import stringFromPig from "./fromPig";
 
 
-let pigAllText = (document: Document): void => {
+let pigAllText = (document: Document, suffix?: string): void => {
     let elements: NodeListOf<HTMLElement> = document.body.querySelectorAll<HTMLElement>("*");
     for (let e of elements) {
         if (e.tagName == "STYLE" || e.tagName == "SCRIPT") {
@@ -10,17 +10,17 @@ let pigAllText = (document: Document): void => {
         }
         for (let n of e.childNodes) {
             if (n.nodeName == "#text" && n.nodeType == Node.TEXT_NODE) {
-                n.textContent = stringToPig(n.textContent ?? "");
+                n.textContent = stringToPig(n.textContent ?? "", suffix);
             }
         }
     }
 }
-let unpigAllText = (document: Document): void => {
+let unpigAllText = (document: Document, suffix?: string): void => {
     let elements: NodeListOf<HTMLElement> = document.body.querySelectorAll<HTMLElement>("*");
     for (let e of elements) {
         for (let n of e.childNodes) {
             if (n.nodeName == "#text") {
-                n.textContent = stringFromPig(n.textContent ?? "");
+                n.textContent = stringFromPig(n.textContent ?? "", suffix);
             }
         }
     }
@@ -28,7 +28,7 @@ let unpigAllText = (document: Document): void => {
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.direction === "topig") {
-        pigAllText(document);
+        pigAllText(document, request.suffix);
         try {
             sendResponse({ status: "done" });
         } catch (e) {
@@ -36,7 +36,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         }
     }
     else if (request.direction === "frompig") {
-        unpigAllText(document);
+        unpigAllText(document, request.suffix);
         try {
             sendResponse({ status: "done" });
         } catch (e) {

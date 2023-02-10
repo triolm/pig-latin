@@ -4,12 +4,9 @@ import words from "../data/words.json";
 import frequencies from "../data/letterfrequencies.json";
 import commonWords from "../data/commonwords.json"
 
-
-//words could end in W
-
 // let wordArr: wordsType = words;
 
-let wordFromPig = (s: string): string => {
+let wordFromPig = (s: string, suffix: string): string => {
 
     //separate word from punctuation
     let { newString, punct } = separatePunctuation(s);
@@ -21,59 +18,58 @@ let wordFromPig = (s: string): string => {
     if (newString === "") { return "" + punct }
 
     //word might not be pig latin
-    if (!endsAy.test(newString)) { return s }
+    if (!endsAy(suffix).test(newString)) { return s }
 
     //the only way a pig latin word could start with a consonant is if the 
     //english word started with three consonants and two were moved to the end
     if (!startsVowel.test(newString)) {
-        newString = removeAy(newString, 2);
+        newString = removeAy(newString, 2, suffix);
     }
 
     //there are ambigious cases if the pig latin word ends in two consonants then "ay"
     //or ends in "way"
-    else if (endsDoubleConsonantAy.test(newString) ||
-        (endsWay.test(newString) && startsVowel.test(newString))) {
-        newString = findBestWord(newString);
+    else if (endsDoubleConsonantAy(suffix).test(newString) ||
+        (endsWay(suffix).test(newString) && startsVowel.test(newString))) {
+        newString = findBestWord(newString, suffix);
     }
 
     //base case with no ambiguity
     else {
-        newString = removeAy(newString, 1);
+        newString = removeAy(newString, 1, suffix);
     }
 
     //capitalize word if necesary
     if (startsUpperCase.test(s)) {
         newString = capitalize(newString)
     }
-
     return newString + punct;
 }
 
-let removeAy = (s: string, charsToMove: number): string => {
+let removeAy = (s: string, charsToMove: number, suffix: string): string => {
     //gets the stem
-    let english = s.substring(0, s.length - (2 + charsToMove));
+    let english = s.substring(0, s.length - (suffix.length + charsToMove));
     //ads the first letter(s) back to the front of the word
-    return s.substring(s.length - (2 + charsToMove), s.length - 2) + english;
+    return s.substring(s.length - (suffix.length + charsToMove), s.length - suffix.length) + english;
 }
 
-let stringFromPig = (s: string): string => {
-    let piggedArr = toArr(s).map(wordFromPig);
+let stringFromPig = (s: string, suffix: string = "ay"): string => {
+    let piggedArr = toArr(s).map((e) => (wordFromPig(e, suffix)));
     return piggedArr.join("");
 }
 
-let findBestWord = (s: string): string => {
+let findBestWord = (s: string, suffix: string): string => {
     //its possible that the first OR first two characters were moved to the end
-    let options = [removeAy(s, 1), removeAy(s, 2)]
+    let options = [removeAy(s, 1, suffix), removeAy(s, 2, suffix)]
 
     //account for the english words starting in vowels 
-    if (endsWay.test(s)) {
-        options.unshift(s.substring(0, s.length - 3));
+    if (endsWay((suffix)).test(s)) {
+        options.unshift(s.substring(0, s.length - (suffix.length + 1)));
     }
 
     //choose best option
     let highest: { word: string, confidence: number } = { word: options[0], confidence: 0 };
     for (let i of options) {
-        let confidence: number = getConfidence(i);
+        let confidence: number = getConfidence(i, suffix);
 
         //if this option is the best so far, put it in highest
         if (confidence && confidence > highest.confidence) {
@@ -87,7 +83,7 @@ let findBestWord = (s: string): string => {
     return highest.word;
 }
 
-let getConfidence = (word: string): number => {
+let getConfidence = (word: string, suffix: string): number => {
     //set confidence to the frequency of the first two letters of the option
     //in the list of english words
     let confidence = frequencies[word.substring(0, 2) as keyof typeof frequencies];
@@ -110,18 +106,18 @@ let getConfidence = (word: string): number => {
 
 
     //if theres two or more ways test the word without them
-    if (/(way){2,}$/.test(word) || /(ayway)$/.test(word) || /(aywa)$/.test(word)) {
+    if (/(way){2,}$/.test(word) || /[a-zA-Z]{1,}(ayway)$/.test(word) || /[a-zA-Z]{1,}(aywa)$/.test(word)) {
         if (!startsVowel.test(word) && confidence < 10000) {
             return 0;
         }
-        let substringConf = getConfidence(wordFromPig(word.replace(/(way)+/, "")));
+        let substringConf = getConfidence(wordFromPig(word.replace(/(way)+/, ""), suffix), suffix);
         if (substringConf > confidence) {
             return substringConf;
         }
     }
 
-    else if (endsAy.test(word)) {
-        let substringConf = getConfidence(wordFromPig(word));
+    else if (endsAy(suffix).test(word)) {
+        let substringConf = getConfidence(wordFromPig(word, suffix), suffix);
         if (substringConf > confidence) {
             return substringConf;
         }

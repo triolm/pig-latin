@@ -1,7 +1,7 @@
 import { capitalize, separatePunctuation, toArr } from "./formatting"
 import { startsUpperCase, startsVowel, startsDoubleConsonant } from "./RegExs"
 
-let wordToPig = (s: string): string => {
+let wordToPig = (s: string, suffix:string): string => {
 
     let { newString, punct } = separatePunctuation(s);
 
@@ -13,17 +13,17 @@ let wordToPig = (s: string): string => {
 
     //add way if word starts in vowel
     if (startsVowel.test(newString)) {
-        newString = newString + "way";
+        newString = newString + "w" + suffix;
     }
 
     //if word starts in 2 consonant, move them both over
     else if (startsDoubleConsonant.test(newString)) {
-        newString = addAy(newString, 2);
+        newString = addAy(newString, 2, suffix);
     }
 
     //base case with no special condition
     else {
-        newString = addAy(newString, 1);
+        newString = addAy(newString, 1, suffix);
     }
 
     //capitalize word if necesary
@@ -35,15 +35,15 @@ let wordToPig = (s: string): string => {
 }
 
 //moves  first character(s) to end and adds ay
-let addAy = (s: string, charsToMove: number): string => {
-    return s.substring(charsToMove) + s.substring(0, charsToMove) + "ay"
+let addAy = (s: string, charsToMove: number, suffix:string): string => {
+    return s.substring(charsToMove) + s.substring(0, charsToMove) + suffix;
 }
 
-let stringToPig = (s: string): string => {
+let stringToPig = (s: string, suffix:string = "ay"): string => {
     if (!s) {
         return "";
     }
-    let piggedArr = toArr(s).map(wordToPig);
+    let piggedArr = toArr(s).map((s) => (wordToPig(s,suffix)));
     return piggedArr.join("");
 }
 
