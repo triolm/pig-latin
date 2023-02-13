@@ -1,34 +1,37 @@
-let startsUpperCase: RegExp = /^[A-Z]/;
-let startsVowel: RegExp = /^[aeiouAEIOU]/
-let startsDoubleConsonant: RegExp = /^[^aeiouAEIOU][^aeiouAEIOU]/
+const startsUpperCase: RegExp = /^[A-Z]/;
 
-let endsMultipleWay = (suffix: string): RegExp => {
+//https://stackoverflow.com/questions/2323988/determine-if-string-is-all-caps-with-regular-expression
+const allCaps: RegExp = /^[^a-z]*$/g;
+const startsVowel: RegExp = /^[aeiouAEIOU]/
+const startsDoubleConsonant: RegExp = /^[^aeiouAEIOU][^aeiouAEIOU]/
+
+const endsMultipleWay = (suffix: string): RegExp => {
     return new RegExp(`(w${suffix}){2,}$`)
 }
 
-let endsAyway = (suffix: string): RegExp => {
+const endsAyway = (suffix: string): RegExp => {
     return new RegExp(`[a-zA-Z]{1,} (${suffix}w${suffix})$`)
 }
 
-let endsAywa = (suffix: string): RegExp => {
+const endsAywa = (suffix: string): RegExp => {
     return new RegExp(`[a-zA-Z]{1,}(${suffix}w${suffix.substring(0, suffix.length - 1)})$`)
 }
 
-let endsDoubleConsonantAy = (suffix: string): RegExp => {
+const endsDoubleConsonantAy = (suffix: string): RegExp => {
     return new RegExp(`([^aeiouAEIOU][^aeiouAEIOU]${suffix})$`)
 }
-let punctuated: RegExp = /[^A-Za-z]$/;
+const punctuated: RegExp = /[^A-Za-z]$/;
 
-let endsAy = (suffix: string): RegExp => {
+const endsAy = (suffix: string): RegExp => {
     return new RegExp(`(${suffix})$`);
 }
-let endsWay = (suffix: string): RegExp => {
+const endsWay = (suffix: string): RegExp => {
     return new RegExp(`(w${suffix})$`);
 }
 
 
 export {
-    startsUpperCase, endsAy, startsVowel,
+    startsUpperCase, endsAy, startsVowel, allCaps,
     startsDoubleConsonant, punctuated, endsDoubleConsonantAy,
     endsWay, endsMultipleWay, endsAyway, endsAywa
 

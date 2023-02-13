@@ -1,5 +1,5 @@
 import { capitalize, separatePunctuation, toArr } from "./formatting";
-import { startsUpperCase, endsAy, startsVowel, endsDoubleConsonantAy, endsWay, endsMultipleWay, endsAyway, endsAywa } from "./RegExs"
+import { startsUpperCase, endsAy, startsVowel, endsDoubleConsonantAy, endsWay, endsMultipleWay, endsAyway, endsAywa, allCaps } from "./RegExs"
 import words from "../data/words.json";
 import frequencies from "../data/letterfrequencies.json";
 import commonWords from "../data/commonwords.json"
@@ -39,7 +39,10 @@ let wordFromPig = (s: string, suffix: string): string => {
     }
 
     //capitalize word if necesary
-    if (startsUpperCase.test(s)) {
+    if (allCaps.test(s)) {
+        newString = newString.toUpperCase();
+    }
+    else if (startsUpperCase.test(s)) {
         newString = capitalize(newString)
     }
     return newString + punct;
