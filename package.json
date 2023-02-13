@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx webpack"
+    "build": "npx webpack && npm run copypublic",
+    "copypublic": "cp public/index.html dist/index.html && cp public/manifest.json dist/manifest.json"
   },
   "keywords": [],
   "author": "",

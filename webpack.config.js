@@ -1,7 +1,10 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/index.ts',
+    entry: {
+        content: './src/index.ts',
+        SendMessage: "./public/SendMessage.ts"
+    },
     module: {
         rules: [
             {
@@ -15,7 +18,7 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js'],
     },
     output: {
-        filename: 'content.js',
+        filename: '[name].js',
         path: path.resolve(__dirname, 'dist'),
     },
     mode: "production"

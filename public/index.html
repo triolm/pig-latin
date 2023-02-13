@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Pig Latin Translator</h1>
+        <label for="suffix">Custom suffix:</label>
+        <input type="text" id="suffix">
+        <label for="suffix" id="suffixInvalid" class="feedback">Suffix must be comprised of letters</label>
+
+        <div class="button-holder">
+            <button id="to-pig">
+                To pig latin
+            </button>
+            <button id="from-pig">
+                From pig latin
+            </button>
+        </div>
+        <span id="failed" class="feedback">Translation failed</span>
+        <span id="pending" class="feedback">Translating...</span>
+        <span id="success" class="feedback">Translation succeeded</span>
+    </div>
+
+    <script src="./SendMessage.js"></script>
+</body>
+<style>
+    body {
+        font-family: sans-serif;
+        width: 300px;
+        height: 300px;
+        color: #1b263b;
+        margin: 0;
+        padding: 0;
+        /* background-color: #f4f1de; */
+        top: 0;
+    }
+
+    h1 {
+        padding: 10px 0px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .button-holder {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    button {
+        font-size: 1.1em;
+        border: 2px solid #1b263b;
+        color: #1b263b;
+        background-color: white;
+        padding: 10px;
+        margin: 5px;
+        transition: 200ms;
+    }
+
+    button:hover {
+        background-color: #1b263b;
+        color: white;
+    }
+
+    label {
+        font-size: 1.1em;
+        display: inline-block;
+    }
+
+    input {
+        border-radius: 0;
+        border: 2px solid #1b263b;
+        width: 50px;
+    }
+
+    div.container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .feedback {
+        font-size: 1.1em;
+        display: none;
+    }
+
+    #suffixInvalid,
+    #failed {
+        color: darkred;
+    }
+
+    #pending {
+        color: darkgoldenrod;
+    }
+
+    #success {
+        color: green;
+    }
+</style>
+
+</html>
