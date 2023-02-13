@@ -86,7 +86,7 @@ let findBestWord = (s: string, suffix: string): string => {
 let getConfidence = (word: string, suffix: string): number => {
     //set confidence to the frequency of the first two letters of the option
     //in the list of english words
-    let confidence = frequencies[word.substring(0, 2) as keyof typeof frequencies];
+    let confidence = frequencies[word.substring(0, 2) as keyof typeof frequencies] ?? 0;
 
     //round down options to only real english words
     let firstLetter: string = word.substring(0, 1);
@@ -106,14 +106,13 @@ let getConfidence = (word: string, suffix: string): number => {
 
 
     //if theres two or more ways test the word without them
-    console.log(endsMultipleWay(suffix).test(word))
     if (endsMultipleWay(suffix).test(word) || endsAyway(suffix).test(word)
         || endsAywa(suffix).test(word)) {
+
         if ((endsAywa(suffix).test(word) || !startsVowel.test(word))
             && confidence < 10000) {
             return 0;
         }
-        console.log(word.replace(new RegExp(`(w${suffix})+`), ""))
         let substringConf = getConfidence(wordFromPig(word.replace(new RegExp(`(w${suffix})+`), ""), suffix), suffix);
         if (substringConf > confidence) {
             return substringConf;
