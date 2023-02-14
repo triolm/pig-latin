@@ -29,7 +29,6 @@ let sendMessage = async (direction: string, suffix: string) => {
             pending.style.display = "none";
         }
     });
-
 }
 
 suffix.addEventListener("keyup", () => {
