@@ -26,6 +26,29 @@ let unpigAllText = (document: Document, suffix?: string): void => {
     }
 }
 
+let downloadPageText = async () => {
+    //source: https://developer.chrome.com/articles/file-system-access/
+
+    const options = {
+        types: [
+            {
+                description: 'Text Files',
+                accept: {
+                    'text/plain': ['.txt'],
+                },
+            },
+        ],
+    };
+    const handle = await window.showSaveFilePicker(options);
+    console.log("here");
+    // Create a FileSystemWritableFileStream to write to.
+    const writable = await handle.createWritable();
+    // Write the contents of the file to the stream.
+    await writable.write(document.querySelector("pre")!.innerHTML);
+    // Close the file and write the contents to disk.
+    await writable.close();
+}
+
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.direction === "topig") {
         pigAllText(document, request.suffix);
@@ -39,6 +62,27 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         unpigAllText(document, request.suffix);
         try {
             sendResponse({ status: "done" });
+        } catch (e) {
+            console.log(e)
+        }
+    }
+    else if (request.action === "download") {
+        console.log("download");
+        downloadPageText();
+        try {
+            sendResponse({ status: "done" });
+        } catch (e) {
+            console.log(e)
+        }
+    }
+    else if (request.action === "checktxt") {
+        try {
+            if (/(.txt)$/.test(document.URL)) {
+                sendResponse({ status: "true" });
+            }
+            else {
+                sendResponse({ status: "false" });
+            }
         } catch (e) {
             console.log(e)
         }

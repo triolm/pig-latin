@@ -5,9 +5,29 @@ const suffixInvalid: HTMLElement = document.querySelector("#suffixInvalid")!;
 const failed: HTMLElement = document.querySelector("#failed")!;
 const pending: HTMLElement = document.querySelector("#pending")!;
 const success: HTMLElement = document.querySelector("#success")!;
+const download: HTMLButtonElement = document.querySelector("#download")!;
+let queryOptions = { active: true, currentWindow: true };
+
+let checkTxt = async () => {
+    let tabs = await chrome.tabs.query(queryOptions);
+    chrome.tabs.sendMessage(tabs[0].id ?? 0, { action: "checktxt" }, function (response) {
+        let lastError = chrome.runtime.lastError;
+        if (lastError) {
+            console.log(lastError.message);
+            return;
+        } else {
+            if (response.status === "true") {
+                download.style.display = "block";
+            } else {
+                download.style.display = "none";
+
+            }
+        }
+    });
+}
+checkTxt()
 
 let sendMessage = async (direction: string, suffix: string) => {
-    let queryOptions = { active: true, currentWindow: true };
     let tabs = await chrome.tabs.query(queryOptions);
     try {
         pending.style.display = "inline-block";
@@ -37,6 +57,19 @@ suffix.addEventListener("keyup", () => {
     } else {
         suffixInvalid.style.display = "none";
     }
+})
+
+download.addEventListener("click", async () => {
+    let tabs = await chrome.tabs.query(queryOptions);
+
+    chrome.tabs.sendMessage(tabs[0].id ?? 0, { direction: "download" }, function (response) {
+        let lastError = chrome.runtime.lastError;
+        if (lastError) {
+            console.log(lastError.message);
+            return;
+        } else {
+        }
+    });
 })
 
 let checkSuffix = () => {

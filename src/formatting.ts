@@ -1,15 +1,24 @@
-import { punctuated } from "./RegExs";
+import { punctuated, startsPunctuated } from "./RegExs";
 
 //check if last character is punctuation and if so delete it, 
 //then recursively keep doing that until the last character is [A-Za-z]
-let separatePunctuation = (newString: string, punct?: string): { newString: string, punct: string } => {
+let separatePunctuation = (newString: string, punct?: string[]): { newString: string, punct: string[] } => {
+    let unpunctuated = newString;
+    punct = punct ?? ["", ""];
+
     if (punctuated.test(newString)) {
-        let unpunctuated = newString.substring(0, newString.length - 1);
-        return separatePunctuation(unpunctuated,
-            newString.substring(newString.length - 1, newString.length)
-            + (punct ?? ""))
+        unpunctuated = unpunctuated.substring(0, unpunctuated.length - 1);
+        punct[1] = newString.substring(newString.length - 1, newString.length) + punct[1]
     }
-    return { newString, punct: (punct ?? "") };
+
+    if (startsPunctuated.test(newString) && unpunctuated) {
+        unpunctuated = unpunctuated.substring(1, unpunctuated.length);
+        punct[0] += newString.substring(0, 1)
+    }
+    if (newString !== unpunctuated) {
+        return separatePunctuation(unpunctuated, punct)
+    }
+    return { newString, punct };
 }
 
 //concatinates each string on one string[] to each string in another

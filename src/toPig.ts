@@ -2,14 +2,16 @@ import { capitalize, separatePunctuation, toArr } from "./formatting"
 import { startsUpperCase, startsVowel, startsDoubleConsonant, allCaps } from "./RegExs"
 
 let wordToPig = (s: string, suffix: string): string => {
+    if (!s) return ""
 
     let { newString, punct } = separatePunctuation(s);
-
 
     newString = newString.toLowerCase().trim();
 
     //if string is empty or only punctutation
-    if (newString === "") { return punct ?? "" }
+    if (!newString) {
+        return punct[0] + newString + punct[1];
+    }
 
     //add way if word starts in vowel
     if (startsVowel.test(newString)) {
@@ -34,7 +36,7 @@ let wordToPig = (s: string, suffix: string): string => {
         newString = capitalize(newString)
     }
 
-    return newString + punct;
+    return punct[0] + newString + punct[1];
 }
 
 //moves  first character(s) to end and adds ay

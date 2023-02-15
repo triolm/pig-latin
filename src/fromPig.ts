@@ -7,7 +7,7 @@ import commonWords from "../data/commonwords.json"
 // let wordArr: wordsType = words;
 
 let wordFromPig = (s: string, suffix: string): string => {
-
+    if (!s) return ""
     //separate word from punctuation
     let { newString, punct } = separatePunctuation(s);
 
@@ -15,7 +15,7 @@ let wordFromPig = (s: string, suffix: string): string => {
     newString = newString.toLowerCase().trim();
 
     //word might be empty string or just punctuation
-    if (newString === "") { return "" + punct }
+    if (!newString) { return punct[0] + punct[1] }
 
     //word might not be pig latin
     if (!endsAy(suffix).test(newString)) { return s }
@@ -45,7 +45,7 @@ let wordFromPig = (s: string, suffix: string): string => {
     else if (startsUpperCase.test(s)) {
         newString = capitalize(newString)
     }
-    return newString + punct;
+    return punct[0] + newString + punct[1];
 }
 
 let removeAy = (s: string, charsToMove: number, suffix: string): string => {

@@ -24,6 +24,9 @@
         <span id="failed" class="feedback">Translation failed</span>
         <span id="pending" class="feedback">Translating...</span>
         <span id="success" class="feedback">Translation succeeded</span>
+
+        <button id="download">Download text
+        </button>
     </div>
 
     <script src="./SendMessage.js"></script>
@@ -92,6 +95,10 @@
         display: none;
     }
 
+    #fileInput {
+        width: 100%;
+    }
+
     #suffixInvalid,
     #failed {
         color: darkred;
@@ -103,6 +110,10 @@
 
     #success {
         color: green;
+    }
+
+    #download {
+        display: none;
     }
 </style>
 
