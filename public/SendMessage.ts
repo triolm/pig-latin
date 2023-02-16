@@ -6,7 +6,7 @@ const failed: HTMLElement = document.querySelector("#failed")!;
 const pending: HTMLElement = document.querySelector("#pending")!;
 const success: HTMLElement = document.querySelector("#success")!;
 const download: HTMLButtonElement = document.querySelector("#download")!;
-let queryOptions = { active: true, currentWindow: true };
+const queryOptions = { active: true, currentWindow: true };
 
 let checkTxt = async () => {
     let tabs = await chrome.tabs.query(queryOptions);
@@ -62,12 +62,11 @@ suffix.addEventListener("keyup", () => {
 download.addEventListener("click", async () => {
     let tabs = await chrome.tabs.query(queryOptions);
 
-    chrome.tabs.sendMessage(tabs[0].id ?? 0, { direction: "download" }, function (response) {
+    chrome.tabs.sendMessage(tabs[0].id ?? 0, { action: "download" }, function (response) {
         let lastError = chrome.runtime.lastError;
         if (lastError) {
             console.log(lastError.message);
             return;
-        } else {
         }
     });
 })
